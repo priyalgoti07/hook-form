@@ -1,6 +1,7 @@
 import { DevTool } from '@hookform/devtools';
 import React from 'react'
 import { useForm } from 'react-hook-form'
+import { string } from 'zod';
 
 type FData = {
     username: string;
@@ -9,7 +10,8 @@ type FData = {
     social: {
         twitter: string;
         facebook: string;
-    }
+    };
+    phoneNumbers: string[];
 }
 export const ReackHookForm = () => {
 
@@ -20,7 +22,8 @@ export const ReackHookForm = () => {
             channel: "",
             social: {
                 twitter: "", facebook: ""
-            }
+            },
+            phoneNumbers: ["", ""]
         }
     });
     const { register, control, handleSubmit, formState } = form;
@@ -69,6 +72,14 @@ export const ReackHookForm = () => {
                 <br />
                 <label htmlFor='facebook'>Facebook</label>
                 <input type='text' id='facebook' {...register('social.facebook')} />
+                <br />
+
+                <label htmlFor='primary-phone'>Primary Phone Number</label>
+                <input type='text' id='primaryphone' {...register('phoneNumbers.0')} />
+                <br />
+
+                <label htmlFor='secondry-phone'>Secondry Phone Number</label>
+                <input type='text' id='secondryphone' {...register('phoneNumbers.1')} />
                 <br />
                 <button>Submit</button>
                 <DevTool control={control} />
