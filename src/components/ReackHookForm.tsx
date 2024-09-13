@@ -9,7 +9,9 @@ type FData = {
 }
 export const ReackHookForm = () => {
 
-    const form = useForm<FData>();
+    const form = useForm<FData>({
+        defaultValues: { username: "priyal", email: "", channel: "" }
+    });
     const { register, control, handleSubmit, formState } = form;
     const { errors } = formState
 
