@@ -5,12 +5,23 @@ import { useForm } from 'react-hook-form'
 type FData = {
     username: string;
     email: string;
-    channel: string
+    channel: string;
+    social: {
+        twitter: string;
+        facebook: string;
+    }
 }
 export const ReackHookForm = () => {
 
     const form = useForm<FData>({
-        defaultValues: { username: "priyal", email: "", channel: "" }
+        defaultValues: {
+            username: "priyal",
+            email: "",
+            channel: "",
+            social: {
+                twitter: "", facebook: ""
+            }
+        }
     });
     const { register, control, handleSubmit, formState } = form;
     const { errors } = formState
@@ -52,6 +63,12 @@ export const ReackHookForm = () => {
                 <input type='text' id='channel' {...register('channel', { required: { value: true, message: "Invalid Chnnel" } })} />
                 <p style={{ color: "red", fontSize: "12px" }}>{errors.channel?.message}</p>
 
+                <br />
+                <label htmlFor='twitter'>Twitter</label>
+                <input type='text' id='twitter' {...register('social.twitter')} />
+                <br />
+                <label htmlFor='facebook'>Facebook</label>
+                <input type='text' id='facebook' {...register('social.facebook')} />
                 <br />
                 <button>Submit</button>
                 <DevTool control={control} />
