@@ -1,7 +1,6 @@
 import { DevTool } from '@hookform/devtools';
-import React from 'react'
-import { useForm } from 'react-hook-form'
-import { string } from 'zod';
+import { useEffect } from 'react';
+import { useFieldArray, useForm } from 'react-hook-form'
 
 type FData = {
     username: string;
@@ -12,6 +11,11 @@ type FData = {
         facebook: string;
     };
     phoneNumbers: string[];
+    phNumbers: {
+        number: string
+    }[];
+    age: number;
+    dob: Date;
 }
 export const ReackHookForm = () => {
 
@@ -23,17 +27,38 @@ export const ReackHookForm = () => {
             social: {
                 twitter: "", facebook: ""
             },
-            phoneNumbers: ["", ""]
+            phoneNumbers: ["", ""],
+            phNumbers: [{ number: "" }],
+            age: 0,
+            dob: new Date()
         }
     });
-    const { register, control, handleSubmit, formState } = form;
+
+    const { register, control, handleSubmit, formState, watch } = form;
     const { errors } = formState
 
     const dataSubmit = (data: FData) => {
         console.log("i am form data submit funaction", data)
     }
+
+    const { fields, append, remove } = useFieldArray({
+        name: 'phNumbers',
+        control,
+    })
+    const watchUsername = watch()
+    console.log("watchUsername---->", watchUsername);
+
+
+    useEffect(() => {
+        const sub = watch((value) => {
+            console.log("value--------->", value);
+            return () => sub.unsubscribe()
+        })
+    }, [watch])
+
     return (
         <>
+            {JSON.stringify(watchUsername)}
             <form onSubmit={handleSubmit(dataSubmit)} noValidate>
                 <label htmlFor='username'>UserName</label>
                 <input type='text' id='username' {...register('username', {
@@ -81,6 +106,34 @@ export const ReackHookForm = () => {
                 <label htmlFor='secondry-phone'>Secondry Phone Number</label>
                 <input type='text' id='secondryphone' {...register('phoneNumbers.1')} />
                 <br />
+                <div>
+                    <label>List of phone Numbers</label>
+                    <div>
+                        {fields.map((field, index) => {
+                            return (
+                                <div key={field.id}>
+                                    <input type='text' {...register(`phNumbers.${index}.number` as const)} />
+                                    {index > 0 && (
+                                        <button onClick={() => remove(index)}>Remove</button>
+
+                                    )}
+                                </div>
+                            )
+                        })}
+                        <button onClick={() => append({ number: "" })}>Add Phone Number</button>
+                    </div>
+                </div>
+
+                <br />
+                <label htmlFor='age'>Age</label>
+                <input type='number' id='age' {...register('age', { valueAsNumber: true, required: { value: true, message: "Enter age" } })} />
+                <p style={{ color: "red", fontSize: "12px" }}>{errors.age?.message}</p>
+
+                <br />
+                <label htmlFor='dob'>Date of birth</label>
+                <input type='date' id='dob' {...register('dob', { valueAsDate: true, required: { value: true, message: "Enter Date of birth" } })} />
+                <p style={{ color: "red", fontSize: "12px" }}>{errors.dob?.message}</p>
+
                 <button>Submit</button>
                 <DevTool control={control} />
             </form>
