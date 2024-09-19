@@ -31,44 +31,57 @@ export const ReackHookForm = () => {
             phNumbers: [{ number: "" }],
             age: 0,
             dob: new Date()
-        }
+        },
+        mode: "all"
     });
 
-    const { register, control, handleSubmit, formState, watch } = form;
+    const { register, control, handleSubmit, formState, watch, getValues, reset } = form;
     const { errors } = formState
 
     const dataSubmit = (data: FData) => {
         console.log("i am form data submit funaction", data)
+        reset()
+
     }
 
+    const dataError = (err: any) => {
+        console.log("err------------>", err)
+    }
     const { fields, append, remove } = useFieldArray({
         name: 'phNumbers',
         control,
     })
     const watchUsername = watch()
-    console.log("watchUsername---->", watchUsername);
+    // console.log("watchUsername---->", watchUsername);
 
 
-    useEffect(() => {
-        const sub = watch((value) => {
-            console.log("value--------->", value);
-            return () => sub.unsubscribe()
-        })
-    }, [watch])
+    // useEffect(() => {
+    //     const sub = watch((value) => {
+    //         console.log("value--------->", value);
+    //         return () => sub.unsubscribe()
+    //     })
+    // }, [watch])
+
+    const handleGetvalue = () => {
+        console.log("getValue Methos", getValues("username"))
+    }
 
     return (
         <>
             {JSON.stringify(watchUsername)}
-            <form onSubmit={handleSubmit(dataSubmit)} noValidate>
+            <form onSubmit={handleSubmit(dataSubmit, dataError)} noValidate>
                 <label htmlFor='username'>UserName</label>
                 <input type='text' id='username' {...register('username', {
                     required: {
                         value: true,
-                        message: "UserName is Empty"
+                        message: "UserName is Empty",
                     },
+                    minLength: 3
 
                 })} />
-                <p style={{ color: "red", fontSize: "12px" }}>{errors.username?.message}</p>
+                {errors?.username?.type === "required" && <p style={{ color: "red", fontSize: "12px" }}>{errors.username?.message}</p>}
+                {errors?.username?.type === "minLength" && <p style={{ color: "red", fontSize: "12px" }}>{"Plese enter 3 minmum Lenght"}</p>}
+
                 <br />
                 <label htmlFor='email'>Email</label>
                 <input type='text' id='email' {...register('email', {
@@ -135,6 +148,8 @@ export const ReackHookForm = () => {
                 <p style={{ color: "red", fontSize: "12px" }}>{errors.dob?.message}</p>
 
                 <button>Submit</button>
+                {/* <button onClick={handleGetvalue}>Get Value</button> */}
+                <button>Click to SetValue</button>
                 <DevTool control={control} />
             </form>
         </>
