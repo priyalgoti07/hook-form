@@ -35,13 +35,14 @@ export const ReackHookForm = () => {
         mode: "all"
     });
 
-    const { register, control, handleSubmit, formState, watch, getValues, reset } = form;
+    const { register, control, handleSubmit, formState, watch, getValues, reset, resetField, setFocus } = form;
     const { errors } = formState
 
     const dataSubmit = (data: FData) => {
         console.log("i am form data submit funaction", data)
-        reset()
-
+        // reset()
+        resetField("channel")
+        setFocus("username")
     }
 
     const dataError = (err: any) => {
