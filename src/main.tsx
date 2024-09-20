@@ -8,7 +8,7 @@ import { ControllerForm } from './components/ControllerForm.tsx'
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     {/* <App /> */}
-    {/* <ReackHookForm /> */}
-    <ControllerForm/>
+    <ReackHookForm />
+    {/* <ControllerForm/> */}
   </StrictMode>,
 )

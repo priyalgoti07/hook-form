@@ -35,9 +35,10 @@ export const ReackHookForm = () => {
         mode: "all"
     });
 
-    const { register, control, handleSubmit, formState, watch, getValues, reset, resetField, setFocus } = form;
-    const { errors } = formState
+    const { register, control, handleSubmit, formState, watch, getValues, reset, resetField, setFocus, trigger } = form;
+    const { errors, dirtyFields } = formState
 
+    console.log({dirtyFields})
     const dataSubmit = (data: FData) => {
         console.log("i am form data submit funaction", data)
         // reset()
@@ -150,7 +151,7 @@ export const ReackHookForm = () => {
 
                 <button>Submit</button>
                 {/* <button onClick={handleGetvalue}>Get Value</button> */}
-                <button>Click to SetValue</button>
+                <button onClick={() => { trigger(["username","channel"]) }}>Click to Tigger</button>
                 <DevTool control={control} />
             </form>
         </>
